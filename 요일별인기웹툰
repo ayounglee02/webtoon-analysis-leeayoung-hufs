@@ -13,7 +13,6 @@ print(f"중복을 제외한 실제 웹툰 작품 수는 {unique_webtoon_count}�
 all_tags = []
 
 for tags in df['태그'].dropna():
-    # 각 줄마다 있는 태그들을 분리하고 공백 제거
     tag_list = [tag.strip() for tag in tags.split('\n') if tag.strip()]
     all_tags.extend(tag_list)
 
