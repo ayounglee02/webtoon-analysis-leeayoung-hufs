@@ -1,0 +1,10 @@
+import pandas as pd
+
+df = pd.read_csv("최종전확인웹툰리스트.csv")
+
+df_2022 = df[df['연도'] == 2022]
+
+duplicate_rows = df_2022[df_2022.duplicated(keep=False)]
+
+print(f"중복 연루된 행의 총 개수: {len(duplicate_rows)}개")
+print(duplicate_rows[['제목', '작가', '평점', '회차']])
