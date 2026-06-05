@@ -1,0 +1,23 @@
+import pandas as pd
+
+df = pd.read_csv("웹툰리스트_평점수정완료.csv8", encoding='utf-8-sig')
+
+df['작가_리스트'] = df['작가'].str.replace(' ', '').str.split(',')
+
+df_exploded = df.explode('작가_리스트')
+
+writer_centered = df_exploded.groupby(['작가_리스트', '연도'])['제목'].agg([
+    ('참여_작품_목록', lambda x: ', '.join(x.unique())), # 참여한 작품들을 한 칸에 모으기
+    ('총_작품_개수', 'count') # 그 연도에 한 진짜 작품 개수 세기
+]).reset_index()
+
+writer_centered.columns = ['작가명', '연도', '참여_작품_목록', '총_작품_개수']
+
+writer_centered = writer_centered.sort_values(by=['총_작품_개수', '작가명', '연도'], ascending=[False, True, True])
+
+
+output_filename = "작가중심_작품_리스트.xlsx"
+writer_centered.to_excel(output_filename, index=False)
+
+
+print(f"파일 이름: {output_filename}")
