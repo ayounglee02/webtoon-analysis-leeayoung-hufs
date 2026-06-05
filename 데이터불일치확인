@@ -1,0 +1,24 @@
+import pandas as pd
+
+df = pd.read_csv("웹툰리스트_평점수정완료.csv", encoding='utf-8-sig')
+
+check_df = df.groupby('제목')[['작가', '평점', '성인여부', '완결여부']].nunique()
+
+mismatch_titles = check_df[(check_df['작가'] > 1) |
+                           (check_df['평점'] > 1) |
+                           (check_df['성인여부'] > 1) |
+                           (check_df['완결여부'] > 1)].index
+
+mismatch_report = df[df['제목'].isin(mismatch_titles)].sort_values(by=['제목', '연도'])
+
+print(f" [데이터 불일치 체크 결과]")
+print(f"수정이 필요한 고유 웹툰 제목 수: {len(mismatch_titles)}개")
+print(f"불일치에 연루되어 확인해야 할 총 행(Row) 수: {len(mismatch_report)}개")
+
+output_file = "2차_데이터_불일치_체크리스트.xlsx"
+mismatch_report.to_excel(output_file, index=False)
+print(f" 상세 내역이 '{output_file}' 파일로 저장되었습니다.")
+
+import os
+
+os.system(f'start "" "{output_file}"') 
