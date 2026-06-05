@@ -1,0 +1,23 @@
+import pandas as pd
+
+try:
+    df = pd.read_csv("웹툰리스트_평점수정완료.csv", encoding='utf-8-sig')
+except UnicodeDecodeError:
+    df = pd.read_csv("웹툰리스트_평점수정완료.csv", encoding='cp949')
+
+
+yearly_stats = df.groupby('연도')['평점'].agg(['count', 'mean','median', 'std']).reset_index()
+
+
+yearly_stats.columns = ['연도', '작품수(개)', '평균 평점', '평점 중앙값', '평점 표준편차']
+
+
+yearly_stats['평균 평점'] = yearly_stats['평균 평점'].round(2)
+yearly_stats['평점 표준편차'] = yearly_stats['평점 표준편차'].round(2)
+
+
+output_filename = "연도별_평점_통계표.xlsx"
+yearly_stats.to_excel(output_filename, index=False)
+
+
+print(f"파일 이름: {output_filename}")
