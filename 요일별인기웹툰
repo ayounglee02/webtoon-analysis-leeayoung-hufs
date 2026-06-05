@@ -1,0 +1,41 @@
+import pandas as pd
+from collections import Counter
+
+df = pd.read_csv('요일별인기웹툰5위.csv', encoding='utf-8-sig')
+
+total_count = len(df)
+
+unique_webtoon_count = df['제목'].nunique()
+
+print(f"수집된 전체 데이터는 {total_count}개입니다.")
+print(f"중복을 제외한 실제 웹툰 작품 수는 {unique_webtoon_count}개입니다.")
+
+all_tags = []
+
+for tags in df['태그'].dropna():
+    # 각 줄마다 있는 태그들을 분리하고 공백 제거
+    tag_list = [tag.strip() for tag in tags.split('\n') if tag.strip()]
+    all_tags.extend(tag_list)
+
+tag_counts = Counter(all_tags)
+top_10 = tag_counts.most_common(15)
+
+for i, (tag, count) in enumerate(top_10, 1):
+    print(f"{i}위. {tag} ({count}회)")
+
+unique_count = len(tag_counts)
+
+print(f"중복 없는 해시태그는 총 {unique_count}개입니다.")
+
+unique_tags_sorted = sorted(tag_counts.keys())
+
+print(f" 수집된 전체 해시태그 목록 (총 {len(unique_tags_sorted)}개)")
+print("-" * 50)
+
+for i in range(0, len(unique_tags_sorted), 5):
+    line = unique_tags_sorted[i:i+5]
+    print(" | ".join(line))
+
+with open("전체태그목록.txt", "w", encoding="utf-8") as f:
+    f.write("\n".join(unique_tags_sorted))
+
