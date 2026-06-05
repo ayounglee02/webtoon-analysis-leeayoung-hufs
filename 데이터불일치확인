@@ -1,6 +1,6 @@
 import pandas as pd
 
-df = pd.read_csv("웹툰리스트_평점수정완료.csv", encoding='utf-8-sig')
+df = pd.read_csv("최종전확인웹툰리스트.csv", encoding='utf-8-sig')
 
 check_df = df.groupby('제목')[['작가', '평점', '성인여부', '완결여부']].nunique()
 
