@@ -2,8 +2,6 @@ import pandas as pd
 
 try:
     df = pd.read_csv("웹툰리스트_평점수정완료.csv", encoding='utf-8-sig')
-except UnicodeDecodeError:
-    df = pd.read_csv("웹툰리스트_평점수정완료.csv", encoding='cp949')
 
 
 yearly_stats = df.groupby('연도')['평점'].agg(['count', 'mean','median', 'std']).reset_index()
